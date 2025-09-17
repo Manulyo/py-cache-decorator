@@ -1,18 +1,21 @@
-from typing import Callable
+import functools
+from typing import Callable, Any
 
 
 def cache(func: Callable) -> Callable:
-    cash_store = {}
+    cache_store = {}
 
-    def wrapper(*args, **kwargs) -> None:
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs) -> Any:
         key = (args, tuple(sorted(kwargs.items())))
 
-        if key in cash_store:
+        if key in cache_store:
             print("Getting from cache")
-            return cash_store[key]
+            return cache_store[key]
 
         print("Calculating new result")
         result = func(*args, **kwargs)
-        cash_store[key] = result
+        cache_store[key] = result
         return result
+
     return wrapper
